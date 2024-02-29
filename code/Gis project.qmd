@@ -5,7 +5,7 @@ format: html
 editor: visual
 ---
 
-Distribution map of Magellanic Penguin (Spheniscus magellanicus) of South America
+### **Distribution map of Magellanic Penguin (Spheniscus magellanicus) of South America**
 
 ```{r}
 #install packages
