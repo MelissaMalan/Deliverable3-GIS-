@@ -5,7 +5,11 @@ format: html
 editor: visual
 ---
 
-### **Distribution map of Magellanic Penguin (Spheniscus magellanicus) of South America**
+### **Distribution maps of Magellanic Penguin (Spheniscus magellanicus) of South America**
+
+```{r}
+options(repos = c(CRAN = "https://cran.rstudio.com"))
+```
 
 ```{r}
 #install packages
