@@ -1,0 +1,142 @@
+---
+title: "GIS Project"
+author: "Melissa Malan"
+format: html
+editor: visual
+---
+
+Distribution map of Magellanic Penguin (Spheniscus magellanicus) of South America
+
+```{r}
+#install packages
+install.packages(c("tidyverse", "sp", "raster", "sf", "lwgeom", "terra", "stars", "exactextractr","mapview","rosm","ggspatial"))
+
+```
+
+```{r}
+#load packages
+library(rinat)
+library(dplyr)
+library(ggplot2)
+library(sf)
+library(leaflet)
+library(htmltools)
+library(mapview)
+library(leafpop)
+library(ggspatial)
+
+```
+
+```{r}
+#2023
+# Call the 2023 data directly from iNat for Magellanic penguins with broader bounds
+SM_2023 <- get_inat_obs(taxon_name = "Spheniscus magellanicus",
+                   bounds = c(-90, -180, 90, 180),
+                   year = 2023,
+                   maxresults = 2000)
+
+#View the first few rows of data
+head(SM_2023)
+
+#Filter returned observations based on criteria
+SM_2023 <- SM_2023 %>% filter(
+  positional_accuracy < 46 & 
+  latitude < 0 &
+  !is.na(latitude) &
+  captive_cultivated == "false" &
+  quality_grade == "research"
+)
+
+#Check the class of the resulting object
+class(SM_2023)
+
+#Make the dataframe a spatial object of class = "sf"
+SM_2023 <- st_as_sf(SM_2023, coords = c("longitude", "latitude"), crs = 4326)
+
+#Note the new "geometry" column
+names(SM_2023)
+
+#Plot data point on coordinate plot
+ggplot() + geom_sf(data= SM_2023)
+
+#Create link for each point
+lSM1 <- SM_2023 %>%
+  mutate(click_url = paste("<b><a href='", url, "'>Link to iNat observation</a></b>"))
+
+#Create an interactive map using leaflet
+leaflet() %>%
+  # Add default OpenStreetMap map tiles
+  addTiles(group = "Default") %>%  
+  # Add points and change color
+  addCircleMarkers(data = SM_2023,
+                   group = "Spheniscus magellanicus",
+                   radius = 2,
+                   color = "purple",
+                   fillColor = "purple",
+                   fillOpacity = "purple",
+                   popup = 
+                     popupTable(lSM1,
+                                zcol = c("user_login", "captive_cultivated", "click_url")))
+
+#Creating an interactive map using mapview
+mapview(SM_2023,
+        col.regions = c( "purple"),
+        popup = popupTable(lSM1, zcol = c("user_login", "captive_cultivated", "click_url")))
+```
+
+```{r}
+#2018
+# Call the 2019 data directly from iNat for Magellanic penguins with broader bounds
+SM_2019 <- get_inat_obs(taxon_name = "Spheniscus magellanicus",
+                   bounds = c(-90, -180, 90, 180),
+                   year = 2019,
+                   maxresults = 2000)
+
+#View the first few rows of data
+head(SM_2019)
+
+#Filter returned observations based on criteria
+SM_2019 <- SM_2019 %>% filter(
+  positional_accuracy < 46 & 
+  latitude < 0 &
+  !is.na(latitude) &
+  captive_cultivated == "false" &
+  quality_grade == "research"
+)
+
+#Check the class of the resulting object
+class(SM_2019)
+
+#Make the dataframe a spatial object of class = "sf"
+SM_2019 <- st_as_sf(SM_2019, coords = c("longitude", "latitude"), crs = 4326)
+
+#Note the new "geometry" column
+names(SM_2019)
+
+#Plot data point on coordinate plot
+ggplot() + geom_sf(data= SM_2019)
+
+#Create link for each point
+lSM2 <- SM_2019 %>%
+  mutate(click_url = paste("<b><a href='", url, "'>Link to iNat observation</a></b>"))
+
+#Create an interactive map using leaflet
+leaflet() %>%
+  # Add default OpenStreetMap map tiles
+  addTiles(group = "Default") %>%  
+  # Add points and change color
+  addCircleMarkers(data = SM_2023,
+                   group = "Spheniscus magellanicus",
+                   radius = 2,
+                   color = "orange",
+                   fillColor = "orange",
+                   fillOpacity = "orange",
+                   popup = 
+                     popupTable(lSM2,
+                                zcol = c("user_login", "captive_cultivated", "click_url")))
+
+#Creating an interactive map using mapview
+mapview(SM_2019,
+        col.regions = c( "orange"),
+        popup = popupTable(lSM2, zcol = c("user_login", "captive_cultivated", "click_url")))
+```
