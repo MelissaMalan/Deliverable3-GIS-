@@ -11,14 +11,15 @@ editor: visual
 options(repos = c(CRAN = "https://cran.rstudio.com"))
 ```
 
-```{r}
-#install packages
-install.packages(c("tidyverse", "sp", "raster", "sf", "lwgeom", "terra", "stars", "exactextractr","mapview","rosm","ggspatial"))
+##### Install packages
 
+```{r}
+install.packages(c("tidyverse", "sp", "raster", "sf", "lwgeom", "terra", "stars", "exactextractr","mapview","rosm","ggspatial"))
 ```
 
+##### Load packages
+
 ```{r}
-#load packages
 library(rinat)
 library(dplyr)
 library(ggplot2)
@@ -28,11 +29,13 @@ library(htmltools)
 library(mapview)
 library(leafpop)
 library(ggspatial)
-
 ```
 
+#### 2023 map:
+
+##### Load data
+
 ```{r}
-#2023
 # Call the 2023 data directly from iNat for Magellanic penguins with broader bounds
 SM_2023 <- get_inat_obs(taxon_name = "Spheniscus magellanicus",
                    bounds = c(-90, -180, 90, 180),
@@ -41,7 +44,11 @@ SM_2023 <- get_inat_obs(taxon_name = "Spheniscus magellanicus",
 
 #View the first few rows of data
 head(SM_2023)
+```
 
+##### Filter data and check class
+
+```{r}
 #Filter returned observations based on criteria
 SM_2023 <- SM_2023 %>% filter(
   positional_accuracy < 46 & 
@@ -53,13 +60,21 @@ SM_2023 <- SM_2023 %>% filter(
 
 #Check the class of the resulting object
 class(SM_2023)
+```
 
+##### Make data into a spatial object
+
+```{r}
 #Make the dataframe a spatial object of class = "sf"
 SM_2023 <- st_as_sf(SM_2023, coords = c("longitude", "latitude"), crs = 4326)
 
 #Note the new "geometry" column
 names(SM_2023)
+```
 
+##### Plot the data
+
+```{r}
 #Plot data point on coordinate plot
 ggplot() + geom_sf(data= SM_2023)
 
@@ -88,8 +103,11 @@ mapview(SM_2023,
         popup = popupTable(lSM1, zcol = c("user_login", "captive_cultivated", "click_url")))
 ```
 
+#### 2019 map: 
+
+##### Load the data
+
 ```{r}
-#2018
 # Call the 2019 data directly from iNat for Magellanic penguins with broader bounds
 SM_2019 <- get_inat_obs(taxon_name = "Spheniscus magellanicus",
                    bounds = c(-90, -180, 90, 180),
@@ -98,7 +116,11 @@ SM_2019 <- get_inat_obs(taxon_name = "Spheniscus magellanicus",
 
 #View the first few rows of data
 head(SM_2019)
+```
 
+##### Filter data and check class
+
+```{r}
 #Filter returned observations based on criteria
 SM_2019 <- SM_2019 %>% filter(
   positional_accuracy < 46 & 
@@ -110,13 +132,21 @@ SM_2019 <- SM_2019 %>% filter(
 
 #Check the class of the resulting object
 class(SM_2019)
+```
 
+##### Make data into spatial object
+
+```{r}
 #Make the dataframe a spatial object of class = "sf"
 SM_2019 <- st_as_sf(SM_2019, coords = c("longitude", "latitude"), crs = 4326)
 
 #Note the new "geometry" column
 names(SM_2019)
+```
 
+##### Plot data
+
+```{r}
 #Plot data point on coordinate plot
 ggplot() + geom_sf(data= SM_2019)
 
